@@ -5,6 +5,12 @@ async function postUser(req,res)
 {
     try
     {
+        if(!req.body.name && !req.body.email && !req.body.age && 
+            !req.body.country && !req.body.password)
+            {
+                return res.status(400).json({msg:"Request body not valid!"})
+            }
+
         const user = new UserProfiles({
             name:req.body.name,
             email:req.body.email,
@@ -38,10 +44,10 @@ async function getUsers(req,res){
     try
     {
         const users = await UserProfiles.find(
-            {}, {name:1, age:1, email:1, country:1, _id:0}
-        )
+            {}
+        ).select("-password")
         
-        if(!users || users.length === 0)
+        if(users.length === 0)
         {
             return res.status(404).json("Can not find users")
         }
@@ -64,6 +70,11 @@ async function getUsers(req,res){
 async function putUsers(req,res){
     try
     {
+        if(!req.params.id)
+        {
+            return res.status(400).json({msg:"Request body not valid!"})
+        }
+
         const userId = req.params.id
         const updatedUser = req.body
 
@@ -99,6 +110,11 @@ async function deleteUsers(req,res){
 
     try
     {
+        if(!req.params.id)
+        {
+            return res.status(400).json({msg:"Request body not valid!"})
+        }
+
         const id = req.params.id
         const user = await UserProfiles.findByIdAndDelete(id)   
         

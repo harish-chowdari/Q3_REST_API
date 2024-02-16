@@ -1,12 +1,15 @@
 const express = require("express")
 const app = express()
 app.use(express.json())
+const dotenv = require("dotenv")
+dotenv.config()
+require("./DB")
 
 
 const UserRoutes = require("./Routes/UserRoutes")
-app.use("/api/userDb", UserRoutes)
+app.use("/api", UserRoutes)
 
-require("./DB")
+
 
 PORT = process.env.PORT || 3000
  
